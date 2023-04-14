@@ -39,6 +39,14 @@ public class Photo {
     public Set<Category> categories = new HashSet<>();
 
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

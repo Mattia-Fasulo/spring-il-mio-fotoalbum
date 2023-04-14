@@ -1,0 +1,30 @@
+.logo{
+    width: 40px;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.not-active{
+    color: black !important;
+}
+
+.container-img{
+    width: 80px;
+}
+
+.container-img-show{
+    height: 150px;
+    width: 200px;
+    object-fit: contain;
+}
+
+.tumble{
+    width: 100%;
+}
+
+td{
+    vertical-align: middle;
+}

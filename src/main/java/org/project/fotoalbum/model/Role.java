@@ -1,9 +1,6 @@
 package org.project.fotoalbum.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -12,6 +9,7 @@ import java.util.Objects;
 public class Role {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, unique = true)
@@ -24,6 +22,8 @@ public class Role {
     public void setId(Integer id) {
         this.id = id;
     }
+
+
 
     public String getName() {
         return name;
