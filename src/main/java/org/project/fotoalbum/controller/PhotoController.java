@@ -1,16 +1,18 @@
 package org.project.fotoalbum.controller;
 
+import jakarta.validation.Valid;
+import org.project.fotoalbum.exceptions.PhotoNotFoundException;
 import org.project.fotoalbum.model.Photo;
-import org.project.fotoalbum.repository.CategoryRepository;
 import org.project.fotoalbum.services.CategoryService;
 import org.project.fotoalbum.services.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +50,76 @@ public class PhotoController {
     ){
         Photo photo = photoService.getById(id);
         model.addAttribute("photo", photo);
+        System.out.println(photo);
         return "/photos/show";
     }
 
+    @GetMapping("/create")
+    public String create(
+            Model model
+    ){
+        model.addAttribute("photo", new Photo());
+        model.addAttribute("categories", categoryService.getAll());
+        return "/photos/save";
+    }
+
+    @PostMapping("/create")
+    public String doCreate(
+        Model model,
+        @Valid @ModelAttribute("photo") Photo formPhoto,
+        BindingResult bindingResult
+    ){
+        if(!photoService.isValidName(formPhoto)) {
+            bindingResult.addError(new FieldError("pizza", "name", formPhoto.getName(), false, null, null,
+                    "name must be unique"));
+        }
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("categories", categoryService.getAll());
+            return "/photos/save";
+        }
+
+        photoService.createPhoto(formPhoto);
+        return "redirect:/photos";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(
+            Model model,
+            @PathVariable Integer id
+    ){
+        try{
+            Photo photo = photoService.getById(id);
+            model.addAttribute("photo", photo);
+            model.addAttribute("categories", categoryService.getAll());
+            return "/photos/save";
+        } catch (PhotoNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Photo with " + id + " not found");
+        }
+    }
+
+    @PostMapping("/edit/{id}")
+    public String doEdit(
+            Model model,
+            @PathVariable Integer id,
+            @Valid @ModelAttribute("photo") Photo formPhoto,
+            BindingResult bindingResult
+    ){
+        if(!photoService.isValidName(formPhoto)) {
+            bindingResult.addError(new FieldError("pizza", "name", formPhoto.getName(), false, null, null,
+                    "name must be unique"));
+        }
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("categories", categoryService.getAll());
+            return "/photos/save";
+        }
+        try{
+            Photo updatePhoto = photoService.updatePhoto(formPhoto, id);
+            return "redirect:/photos/" + Integer.toString(updatePhoto.getId());
+        } catch (PhotoNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Photo with " + id + " not found");
+        }
+    }
 
 }

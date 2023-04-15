@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -36,8 +37,46 @@ public class Photo {
         inverseJoinColumns = @JoinColumn(name = "category_id")
 
     )
-    public Set<Category> categories = new HashSet<>();
+    public Set<Category> categories;
 
+    @ManyToMany
+    @JoinTable(
+            name = "photo_type",
+            joinColumns = @JoinColumn(name = "photo_id"),
+            inverseJoinColumns = @JoinColumn(name = "type_id")
+    )
+    public Set<Type> types;
+
+    private LocalDateTime createdAt;
+
+
+    public Photo() {
+        super();
+    }
+
+    public Photo(String name, String description, String url, boolean visible, Set<Category> categories) {
+        this.name = name;
+        this.description = description;
+        this.url = url;
+        this.visible = visible;
+        this.categories = categories;
+    }
+
+    public Set<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<Type> types) {
+        this.types = types;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public Integer getId() {
         return id;
@@ -96,7 +135,16 @@ public class Photo {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, url, visible, categories);
+    public String toString() {
+        return "Photo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", visible=" + visible +
+                ", categories=" + categories +
+                ", types=" + types +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

@@ -3,6 +3,7 @@ package org.project.fotoalbum.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,6 +21,16 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")
     private Set<Photo> photos = new HashSet<>();
+
+    private LocalDateTime createdAt;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public Integer getId() {
         return id;
@@ -56,5 +67,14 @@ public class Category {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, photos);
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }
