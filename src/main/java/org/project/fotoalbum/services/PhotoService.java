@@ -79,4 +79,14 @@ public class PhotoService {
         return photoRepository.save(photoToUpdate);
 
     }
+
+    public boolean deleteById(Integer id) throws PhotoNotFoundException{
+        photoRepository.findById(id).orElseThrow(()->new PhotoNotFoundException("Photo with " + Integer.toString(id) + " not found"));
+        try{
+            photoRepository.deleteById(id);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
 }

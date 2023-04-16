@@ -34,7 +34,7 @@
         <tr th:each="photo : ${list}" th:object="${photo}">
             <td th:text="*{name}"></td>
             <td th:text="*{description}"></td>
-            <td class="d-flex justify-content-center">
+            <td>
                 <div class="container-img">
                     <img class="tumble" th:src="*{url}" th:alt="*{name}">
                 </div>
@@ -43,28 +43,27 @@
 
             <td style="width: 130px">
 
-                <div class="w-100 h-100 d-flex justify-content-between mt-2">
+                <div class="w-100 h-100 ">
                     <a th:href="@{|/photos/*{id}|}" class="btn btn-secondary btn-sm"  title="detail">
                         <i class="fa-solid fa-camera-retro"></i>
                     </a>
-                    <!--
+
                     <a
-                            th:href="@{|/pizzas/edit/*{id}|}"
+                            th:href="@{|/photos/edit/*{id}|}"
                             class="btn btn-secondary btn-sm"
                             title="edit"
-                            sec:authorize="hasAuthority('ADMIN')"
                     >
                         <i class="fa-regular fa-pen-to-square text-light"></i>
                     </a>
+
                     <a
-                            th:href="@{|/pizzas/delete/*{id}|}"
+                            th:href="@{|/photos/delete/*{id}|}"
                             class="btn btn-secondary btn-sm"
                             title="delete"
-                            sec:authorize="hasAuthority('ADMIN')"
                     >
                         <i class="fa-solid fa-trash-can"></i>
                     </a>
-                    -->
+
                 </div>
 
             </td>

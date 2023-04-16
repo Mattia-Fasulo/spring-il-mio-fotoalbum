@@ -2,6 +2,8 @@ package org.project.fotoalbum.controller;
 
 import jakarta.validation.Valid;
 import org.project.fotoalbum.exceptions.PhotoNotFoundException;
+import org.project.fotoalbum.model.AlertMessage;
+import org.project.fotoalbum.model.AlertMessage.AlertMessageType;
 import org.project.fotoalbum.model.Photo;
 import org.project.fotoalbum.services.CategoryService;
 import org.project.fotoalbum.services.PhotoService;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -121,5 +124,27 @@ public class PhotoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Photo with " + id + " not found");
         }
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(
+        @PathVariable Integer id,
+        RedirectAttributes redirectAttributes
+    ){
+        try{
+            boolean success = photoService.deleteById(id);
+            if(success){
+                redirectAttributes.addFlashAttribute("message",
+                        new AlertMessage(AlertMessageType.SUCCESS, "Photo with id " + 1 + " deleted"));
+            } else {
+                redirectAttributes.addFlashAttribute("message",
+                        new AlertMessage(AlertMessageType.ERROR, "Unable to delete photo with id " + id));
+            }
+        } catch(PhotoNotFoundException e){
+            redirectAttributes.addFlashAttribute("message",
+                    new AlertMessage(AlertMessageType.ERROR, "Photo with id " + id + " not found"));
+        }
+        return "redirect:/photos";
+    }
+
 
 }
